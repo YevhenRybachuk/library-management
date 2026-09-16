@@ -1,22 +1,27 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const app: HTMLElement | null = document.getElementById("app");
+import { Book } from "./models/Book";
+import { User } from "./models/User";
+import { Library } from "./services/Library";
 
-if (app === null) {
-    throw new Error("App container not found");
-}
+const bookLibrary: Library<Book> = new Library<Book>();
+const userLibrary: Library<User> = new Library<User>();
 
-const container: HTMLDivElement = document.createElement("div");
-container.className = "container mt-5";
+const book: Book = new Book(
+    "book-1",
+    "The Hobbit",
+    "J.R.R. Tolkien",
+    1937
+);
 
-const title: HTMLHeadingElement = document.createElement("h1");
-title.className = "mb-4";
-title.textContent = "Library Management";
+const user: User = new User(
+    "user-1",
+    "Yevhen"
+);
 
-const message: HTMLParagraphElement = document.createElement("p");
-message.className = "text-muted";
-message.textContent = "Library application is running.";
+bookLibrary.add(book);
+userLibrary.add(user);
 
-container.appendChild(title);
-container.appendChild(message);
-app.appendChild(container);
+console.log("Books:", bookLibrary.getAll());
+console.log("Users:", userLibrary.getAll());
+console.log("Found book:", bookLibrary.find("book-1"));
