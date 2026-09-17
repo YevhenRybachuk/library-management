@@ -1,6 +1,9 @@
 import { User } from "../../models/User";
 
-export function createUserList(users: User[]): HTMLElement {
+export function createUserList(
+    users: User[],
+    onUserDeleted: (userId: string) => void
+): HTMLElement {
     const container: HTMLDivElement = document.createElement("div");
 
     container.className = "container mt-4";
@@ -15,7 +18,9 @@ export function createUserList(users: User[]): HTMLElement {
 
     list.className = "row";
 
-    users.forEach((user: User) => {
+    container.appendChild(list);
+
+    users.forEach((user: User): void => {
         const column: HTMLDivElement = document.createElement("div");
 
         column.className = "col-md-4 mb-3";
@@ -28,35 +33,48 @@ export function createUserList(users: User[]): HTMLElement {
 
         cardBody.className = "card-body";
 
-        const userName: HTMLHeadingElement =
-            document.createElement("h5");
+        const userName: HTMLHeadingElement = document.createElement("h5");
 
         userName.className = "card-title";
+
         userName.textContent = user.name;
 
-        const userId: HTMLParagraphElement =
-            document.createElement("p");
+        const userId: HTMLParagraphElement = document.createElement("p");
 
         userId.className = "card-text";
+
         userId.textContent = `ID: ${user.id}`;
 
-        const borrowedBooks: HTMLParagraphElement =
-            document.createElement("p");
+        const borrowedBooks: HTMLParagraphElement = document.createElement("p");
 
         borrowedBooks.className = "card-text";
-        borrowedBooks.textContent =
-            `Borrowed books: ${user.borrowedBookIds.length}`;
+
+        borrowedBooks.textContent = `Borrowed books: ${user.borrowedBookIds.length}`;
+
+        // =========================
+        // DELETE BUTTON
+        // =========================
+
+        const deleteButton: HTMLButtonElement =
+            document.createElement("button");
+
+        deleteButton.className = "btn btn-danger";
+
+        deleteButton.textContent = "Delete";
+
+        deleteButton.addEventListener("click", (): void => {
+            onUserDeleted(user.id);
+        });
 
         cardBody.appendChild(userName);
         cardBody.appendChild(userId);
         cardBody.appendChild(borrowedBooks);
+        cardBody.appendChild(deleteButton);
 
         card.appendChild(cardBody);
         column.appendChild(card);
         list.appendChild(column);
     });
-
-    container.appendChild(list);
 
     return container;
 }

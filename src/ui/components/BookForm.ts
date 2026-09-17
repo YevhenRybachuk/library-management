@@ -63,8 +63,7 @@ export function createBookForm(
 
     errorMessage.className = "text-danger mb-3";
 
-    const submitButton: HTMLButtonElement =
-        document.createElement("button");
+    const submitButton: HTMLButtonElement = document.createElement("button");
 
     submitButton.type = "submit";
     submitButton.className = "btn btn-primary";

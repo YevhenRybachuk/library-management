@@ -2,34 +2,34 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import { Book } from "./models/Book";
 import { User } from "./models/User";
+import { IBook } from "./models/interfaces/IBook";
+import { IUser } from "./models/interfaces/IUser";
+
 import { Library } from "./services/Library";
+import { StorageService } from "./services/Storage";
+
 import { createBookForm } from "./ui/components/BookForm";
 import { createBookList } from "./ui/components/BookList";
 import { createUserForm } from "./ui/components/UserForm";
 import { createUserList } from "./ui/components/UserList";
 import { createBorrowForm } from "./ui/components/BorrowForm";
 
+// ==========================================
+// LIBRARIES AND STORAGE
+// ==========================================
+
 const bookLibrary: Library<Book> = new Library<Book>();
+
 const userLibrary: Library<User> = new Library<User>();
 
-const initialBook: Book = new Book(
-    "book-1",
-    "The Hobbit",
-    "J.R.R. Tolkien",
-    1937
-);
+const storage: StorageService = new StorageService();
 
-const initialUser: User = new User(
-    "1",
-    "Yevhen"
-);
-
-bookLibrary.add(initialBook);
-userLibrary.add(initialUser);
+// ==========================================
+// APP
+// ==========================================
 
 function getApp(): HTMLElement {
-    const element: HTMLElement | null =
-        document.getElementById("app");
+    const element: HTMLElement | null = document.getElementById("app");
 
     if (element === null) {
         throw new Error("App element not found");
@@ -40,6 +40,73 @@ function getApp(): HTMLElement {
 
 const app: HTMLElement = getApp();
 
+// ==========================================
+// STORAGE
+// ==========================================
+
+function saveData(): void {
+    storage.save("books", bookLibrary.getAll());
+
+    storage.save("users", userLibrary.getAll());
+}
+
+function loadBooks(): void {
+    const books: IBook[] = storage.load<IBook>("books");
+
+    books.forEach((data: IBook): void => {
+        const book: Book = new Book(
+            data.id,
+            data.title,
+            data.author,
+            data.publicationYear
+        );
+
+        if (data.isBorrowed && data.borrowedBy !== null) {
+            book.borrow(data.borrowedBy);
+        }
+
+        bookLibrary.add(book);
+    });
+}
+
+function loadUsers(): void {
+    const users: IUser[] = storage.load<IUser>("users");
+
+    users.forEach((data: IUser): void => {
+        const user: User = new User(data.id, data.name);
+
+        data.borrowedBookIds.forEach((bookId: string): void => {
+            user.borrowBook(bookId);
+        });
+
+        userLibrary.add(user);
+    });
+}
+
+// ==========================================
+// INITIAL DATA
+// ==========================================
+
+function createInitialData(): void {
+    const initialBook: Book = new Book(
+        "book-1",
+        "The Hobbit",
+        "J.R.R. Tolkien",
+        1937
+    );
+
+    const initialUser: User = new User("1", "Yevhen");
+
+    bookLibrary.add(initialBook);
+    userLibrary.add(initialUser);
+
+    saveData();
+}
+
+// ==========================================
+// RENDER BOOKS
+// ==========================================
+
 function renderBooks(): void {
     const oldBookList: HTMLElement | null =
         document.getElementById("book-list");
@@ -49,13 +116,29 @@ function renderBooks(): void {
     }
 
     const bookList: HTMLElement = createBookList(
-        bookLibrary.getAll()
+        bookLibrary.getAll(),
+        (bookId: string): void => {
+            const book: Book | undefined = bookLibrary.find(bookId);
+
+            if (book !== undefined && book.isBorrowed) {
+                return;
+            }
+
+            bookLibrary.remove(bookId);
+
+            saveData();
+            renderBooks();
+        }
     );
 
     bookList.id = "book-list";
 
     app.appendChild(bookList);
 }
+
+// ==========================================
+// RENDER USERS
+// ==========================================
 
 function renderUsers(): void {
     const oldUserList: HTMLElement | null =
@@ -66,7 +149,23 @@ function renderUsers(): void {
     }
 
     const userList: HTMLElement = createUserList(
-        userLibrary.getAll()
+        userLibrary.getAll(),
+        (userId: string): void => {
+            const user: User | undefined = userLibrary.find(userId);
+
+            if (user === undefined) {
+                return;
+            }
+
+            if (user.borrowedBookIds.length > 0) {
+                return;
+            }
+
+            userLibrary.remove(userId);
+
+            saveData();
+            renderUsers();
+        }
     );
 
     userList.id = "user-list";
@@ -74,28 +173,57 @@ function renderUsers(): void {
     app.appendChild(userList);
 }
 
-const bookForm: HTMLElement = createBookForm(
-    bookLibrary,
-    renderBooks
-);
+// ==========================================
+// LOAD DATA
+// ==========================================
 
-const userForm: HTMLElement = createUserForm(
-    userLibrary,
-    renderUsers
-);
+loadBooks();
+loadUsers();
+
+// ==========================================
+// CREATE INITIAL DATA IF STORAGE IS EMPTY
+// ==========================================
+
+if (bookLibrary.count === 0 && userLibrary.count === 0) {
+    createInitialData();
+}
+
+// ==========================================
+// CREATE UI FORMS
+// ==========================================
+
+const bookForm: HTMLElement = createBookForm(bookLibrary, (): void => {
+    saveData();
+    renderBooks();
+});
+
+const userForm: HTMLElement = createUserForm(userLibrary, (): void => {
+    saveData();
+    renderUsers();
+});
 
 const borrowForm: HTMLElement = createBorrowForm(
     bookLibrary,
     userLibrary,
     (): void => {
+        saveData();
+
         renderBooks();
         renderUsers();
     }
 );
 
+// ==========================================
+// ADD UI TO PAGE
+// ==========================================
+
 app.appendChild(bookForm);
 app.appendChild(userForm);
 app.appendChild(borrowForm);
+
+// ==========================================
+// INITIAL RENDER
+// ==========================================
 
 renderBooks();
 renderUsers();

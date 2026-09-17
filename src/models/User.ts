@@ -42,4 +42,12 @@ export class User implements IUser {
             (id: string) => id !== bookId
         );
     }
+
+    toJSON(): IUser {
+        return {
+            id: this.id,
+            name: this.name,
+            borrowedBookIds: this.borrowedBookIds,
+        };
+    }
 }

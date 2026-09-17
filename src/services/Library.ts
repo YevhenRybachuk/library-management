@@ -6,9 +6,7 @@ export class Library<T extends { id: string }> {
     }
 
     remove(id: string): boolean {
-        const index: number = this.items.findIndex(
-            (item: T) => item.id === id
-        );
+        const index: number = this.items.findIndex((item: T) => item.id === id);
 
         if (index === -1) {
             return false;
@@ -24,6 +22,10 @@ export class Library<T extends { id: string }> {
 
     getAll(): T[] {
         return [...this.items];
+    }
+
+    clear(): void {
+        this.items = [];
     }
 
     get count(): number {

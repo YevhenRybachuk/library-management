@@ -33,26 +33,22 @@ export function createUserForm(
 
     nameGroup.className = "mb-3";
 
-    const nameLabel: HTMLLabelElement =
-        document.createElement("label");
+    const nameLabel: HTMLLabelElement = document.createElement("label");
 
     nameLabel.className = "form-label";
     nameLabel.textContent = "Name";
 
-    const nameInput: HTMLInputElement =
-        document.createElement("input");
+    const nameInput: HTMLInputElement = document.createElement("input");
 
     nameInput.type = "text";
     nameInput.className = "form-control";
     nameInput.placeholder = "Enter user name";
 
-    const errorMessage: HTMLDivElement =
-        document.createElement("div");
+    const errorMessage: HTMLDivElement = document.createElement("div");
 
     errorMessage.className = "text-danger mb-3";
 
-    const submitButton: HTMLButtonElement =
-        document.createElement("button");
+    const submitButton: HTMLButtonElement = document.createElement("button");
 
     submitButton.type = "submit";
     submitButton.className = "btn btn-primary";
@@ -84,8 +80,7 @@ export function createUserForm(
         }
 
         if (!Validation.isUserIdValid(id)) {
-            errorMessage.textContent =
-                "User ID must contain only digits.";
+            errorMessage.textContent = "User ID must contain only digits.";
             return;
         }
 
@@ -96,8 +91,7 @@ export function createUserForm(
         }
 
         if (userLibrary.find(id) !== undefined) {
-            errorMessage.textContent =
-                "A user with this ID already exists.";
+            errorMessage.textContent = "A user with this ID already exists.";
             return;
         }
 

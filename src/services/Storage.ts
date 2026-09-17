@@ -4,10 +4,7 @@ export class StorageService {
     save<T>(key: string, data: T[]): void {
         const storageKey: string = `${this.prefix}-${key}`;
 
-        localStorage.setItem(
-            storageKey,
-            JSON.stringify(data)
-        );
+        localStorage.setItem(storageKey, JSON.stringify(data));
     }
 
     load<T>(key: string): T[] {

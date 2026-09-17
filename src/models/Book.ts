@@ -71,4 +71,15 @@ export class Book implements IBook {
         this._isBorrowed = false;
         this._borrowedBy = null;
     }
+
+    toJSON(): IBook {
+        return {
+            id: this.id,
+            title: this.title,
+            author: this.author,
+            publicationYear: this.publicationYear,
+            isBorrowed: this.isBorrowed,
+            borrowedBy: this.borrowedBy,
+        };
+    }
 }
