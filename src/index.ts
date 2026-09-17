@@ -7,6 +7,7 @@ import { IUser } from "./models/interfaces/IUser";
 
 import { Library } from "./services/Library";
 import { StorageService } from "./services/Storage";
+import { NotificationService } from "./services/NotificationService";
 
 import { createBookForm } from "./ui/components/BookForm";
 import { createBookList } from "./ui/components/BookList";
@@ -23,6 +24,9 @@ const bookLibrary: Library<Book> = new Library<Book>();
 const userLibrary: Library<User> = new Library<User>();
 
 const storage: StorageService = new StorageService();
+
+const notifications: NotificationService =
+    new NotificationService();
 
 // ==========================================
 // APP
@@ -202,16 +206,18 @@ const userForm: HTMLElement = createUserForm(userLibrary, (): void => {
     renderUsers();
 });
 
-const borrowForm: HTMLElement = createBorrowForm(
-    bookLibrary,
-    userLibrary,
-    (): void => {
-        saveData();
+const borrowForm: HTMLElement =
+    createBorrowForm(
+        bookLibrary,
+        userLibrary,
+        notifications,
+        (): void => {
+            saveData();
 
-        renderBooks();
-        renderUsers();
-    }
-);
+            renderBooks();
+            renderUsers();
+        }
+    );
 
 // ==========================================
 // ADD UI TO PAGE
