@@ -1,72 +1,49 @@
-export function showModal(
-    title: string,
-    message: string
-): void {
-    const backdrop: HTMLDivElement =
-        document.createElement("div");
+export function showModal(title: string, message: string): void {
+    const backdrop: HTMLDivElement = document.createElement("div");
 
-    backdrop.className =
-        "modal fade show";
+    backdrop.className = "modal fade show";
 
     backdrop.style.display = "block";
     backdrop.setAttribute("role", "dialog");
 
-    const dialog: HTMLDivElement =
-        document.createElement("div");
+    const dialog: HTMLDivElement = document.createElement("div");
 
-    dialog.className =
-        "modal-dialog";
+    dialog.className = "modal-dialog";
 
-    const content: HTMLDivElement =
-        document.createElement("div");
+    const content: HTMLDivElement = document.createElement("div");
 
-    content.className =
-        "modal-content";
+    content.className = "modal-content";
 
-    const header: HTMLDivElement =
-        document.createElement("div");
+    const header: HTMLDivElement = document.createElement("div");
 
-    header.className =
-        "modal-header";
+    header.className = "modal-header";
 
-    const heading: HTMLHeadingElement =
-        document.createElement("h5");
+    const heading: HTMLHeadingElement = document.createElement("h5");
 
-    heading.className =
-        "modal-title";
+    heading.className = "modal-title";
 
     heading.textContent = title;
 
-    const closeButton: HTMLButtonElement =
-        document.createElement("button");
+    const closeButton: HTMLButtonElement = document.createElement("button");
 
     closeButton.type = "button";
     closeButton.className = "btn-close";
-    closeButton.setAttribute(
-        "aria-label",
-        "Close"
-    );
+    closeButton.setAttribute("aria-label", "Close");
 
-    const body: HTMLDivElement =
-        document.createElement("div");
+    const body: HTMLDivElement = document.createElement("div");
 
-    body.className =
-        "modal-body";
+    body.className = "modal-body";
 
     body.textContent = message;
 
-    const footer: HTMLDivElement =
-        document.createElement("div");
+    const footer: HTMLDivElement = document.createElement("div");
 
-    footer.className =
-        "modal-footer";
+    footer.className = "modal-footer";
 
-    const okButton: HTMLButtonElement =
-        document.createElement("button");
+    const okButton: HTMLButtonElement = document.createElement("button");
 
     okButton.type = "button";
-    okButton.className =
-        "btn btn-primary";
+    okButton.className = "btn btn-primary";
 
     okButton.textContent = "OK";
 
@@ -74,15 +51,9 @@ export function showModal(
         backdrop.remove();
     }
 
-    closeButton.addEventListener(
-        "click",
-        close
-    );
+    closeButton.addEventListener("click", close);
 
-    okButton.addEventListener(
-        "click",
-        close
-    );
+    okButton.addEventListener("click", close);
 
     header.appendChild(heading);
     header.appendChild(closeButton);
