@@ -25,8 +25,7 @@ const userLibrary: Library<User> = new Library<User>();
 
 const storage: StorageService = new StorageService();
 
-const notifications: NotificationService =
-    new NotificationService();
+const notifications: NotificationService = new NotificationService();
 
 // ==========================================
 // APP
@@ -125,6 +124,10 @@ function renderBooks(): void {
             const book: Book | undefined = bookLibrary.find(bookId);
 
             if (book !== undefined && book.isBorrowed) {
+                notifications.show(
+                    "Cannot delete a borrowed book. Return it first.",
+                    "warning"
+                );
                 return;
             }
 
@@ -162,6 +165,10 @@ function renderUsers(): void {
             }
 
             if (user.borrowedBookIds.length > 0) {
+                notifications.show(
+                    "Cannot delete a user with borrowed books. Return all books first.",
+                    "warning"
+                );
                 return;
             }
 
@@ -206,18 +213,17 @@ const userForm: HTMLElement = createUserForm(userLibrary, (): void => {
     renderUsers();
 });
 
-const borrowForm: HTMLElement =
-    createBorrowForm(
-        bookLibrary,
-        userLibrary,
-        notifications,
-        (): void => {
-            saveData();
+const borrowForm: HTMLElement = createBorrowForm(
+    bookLibrary,
+    userLibrary,
+    notifications,
+    (): void => {
+        saveData();
 
-            renderBooks();
-            renderUsers();
-        }
-    );
+        renderBooks();
+        renderUsers();
+    }
+);
 
 // ==========================================
 // ADD UI TO PAGE

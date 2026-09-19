@@ -1,44 +1,44 @@
 {
-  "name": "library-management",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "vite",
-    "build": "vite build",
-    "typecheck": "tsc --noEmit",
-    "test": "tsc -p tsconfig.test.json && mocha \"test-dist/tests/**/*.test.js\"",
-    "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
-    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\" \"*.json\" \"*.js\" \"*.html\"",
-    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\" \"*.json\" \"*.js\" \"*.html\"",
-    "prepare": "husky"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/YevhenRybachuk/library-management.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/YevhenRybachuk/library-management/issues"
-  },
-  "homepage": "https://github.com/YevhenRybachuk/library-management#readme",
-  "devDependencies": {
-    "@types/chai": "^5.2.3",
-    "@types/mocha": "^10.0.10",
-    "@typescript-eslint/eslint-plugin": "^8.70.0",
-    "@typescript-eslint/parser": "^8.70.0",
-    "chai": "^6.2.2",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^10.1.8",
-    "husky": "^9.1.7",
-    "mocha": "^12.0.1",
-    "prettier": "^3.9.7",
-    "typescript": "5.9",
-    "vite": "^8.3.0"
-  },
-  "dependencies": {
-    "bootstrap": "^5.3.8"
-  }
+    "name": "library-management",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "vite",
+        "build": "vite build",
+        "typecheck": "tsc --noEmit",
+        "test": "tsc -p tsconfig.test.json && mocha \"test-dist/tests/**/*.test.js\"",
+        "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
+        "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\" \"*.json\" \"*.html\"",
+        "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\" \"*.json\" \"*.html\"",
+        "prepare": "husky"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/YevhenRybachuk/library-management.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/YevhenRybachuk/library-management/issues"
+    },
+    "homepage": "https://github.com/YevhenRybachuk/library-management#readme",
+    "devDependencies": {
+        "@types/chai": "^5.2.3",
+        "@types/mocha": "^10.0.10",
+        "@typescript-eslint/eslint-plugin": "^8.70.0",
+        "@typescript-eslint/parser": "^8.70.0",
+        "chai": "^6.2.2",
+        "eslint": "^8.57.1",
+        "eslint-config-prettier": "^10.1.8",
+        "husky": "^9.1.7",
+        "mocha": "^12.0.1",
+        "prettier": "^3.9.7",
+        "typescript": "5.9",
+        "vite": "^8.3.0"
+    },
+    "dependencies": {
+        "bootstrap": "^5.3.8"
+    }
 }

@@ -20,61 +20,141 @@ export function createUserList(
 
     container.appendChild(list);
 
-    users.forEach((user: User): void => {
-        const column: HTMLDivElement = document.createElement("div");
+    const pagination: HTMLDivElement = document.createElement("div");
 
-        column.className = "col-md-4 mb-3";
+    pagination.className =
+        "d-flex justify-content-center align-items-center gap-3 mt-3";
 
-        const card: HTMLDivElement = document.createElement("div");
+    container.appendChild(pagination);
 
-        card.className = "card h-100";
+    const previousButton: HTMLButtonElement = document.createElement("button");
 
-        const cardBody: HTMLDivElement = document.createElement("div");
+    previousButton.className = "btn btn-secondary";
+    previousButton.textContent = "Previous";
 
-        cardBody.className = "card-body";
+    const pageInfo: HTMLSpanElement = document.createElement("span");
 
-        const userName: HTMLHeadingElement = document.createElement("h5");
+    const nextButton: HTMLButtonElement = document.createElement("button");
 
-        userName.className = "card-title";
+    nextButton.className = "btn btn-secondary";
+    nextButton.textContent = "Next";
 
-        userName.textContent = user.name;
+    pagination.appendChild(previousButton);
+    pagination.appendChild(pageInfo);
+    pagination.appendChild(nextButton);
 
-        const userId: HTMLParagraphElement = document.createElement("p");
+    const usersPerPage: number = 5;
 
-        userId.className = "card-text";
+    let currentPage: number = 1;
 
-        userId.textContent = `ID: ${user.id}`;
+    function renderUsers(): void {
+        list.innerHTML = "";
 
-        const borrowedBooks: HTMLParagraphElement = document.createElement("p");
+        const totalPages: number = Math.max(
+            1,
+            Math.ceil(users.length / usersPerPage)
+        );
 
-        borrowedBooks.className = "card-text";
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
 
-        borrowedBooks.textContent = `Borrowed books: ${user.borrowedBookIds.length}`;
+        const startIndex: number = (currentPage - 1) * usersPerPage;
 
-        // =========================
-        // DELETE BUTTON
-        // =========================
+        const endIndex: number = startIndex + usersPerPage;
 
-        const deleteButton: HTMLButtonElement =
-            document.createElement("button");
+        const usersToShow: User[] = users.slice(startIndex, endIndex);
 
-        deleteButton.className = "btn btn-danger";
+        if (usersToShow.length === 0) {
+            const message: HTMLParagraphElement = document.createElement("p");
 
-        deleteButton.textContent = "Delete";
+            message.className = "text-muted";
+            message.textContent = "No users found.";
 
-        deleteButton.addEventListener("click", (): void => {
-            onUserDeleted(user.id);
+            list.appendChild(message);
+        }
+
+        usersToShow.forEach((user: User): void => {
+            const column: HTMLDivElement = document.createElement("div");
+
+            column.className = "col-md-4 mb-3";
+
+            const card: HTMLDivElement = document.createElement("div");
+
+            card.className = "card h-100";
+
+            const cardBody: HTMLDivElement = document.createElement("div");
+
+            cardBody.className = "card-body";
+
+            const userName: HTMLHeadingElement = document.createElement("h5");
+
+            userName.className = "card-title";
+
+            userName.textContent = user.name;
+
+            const userId: HTMLParagraphElement = document.createElement("p");
+
+            userId.className = "card-text";
+
+            userId.textContent = `ID: ${user.id}`;
+
+            const borrowedBooks: HTMLParagraphElement =
+                document.createElement("p");
+
+            borrowedBooks.className = "card-text";
+
+            borrowedBooks.textContent = `Borrowed books: ${user.borrowedBookIds.length}`;
+
+            const deleteButton: HTMLButtonElement =
+                document.createElement("button");
+
+            deleteButton.className = "btn btn-danger";
+
+            deleteButton.textContent = "Delete";
+
+            deleteButton.addEventListener("click", (): void => {
+                onUserDeleted(user.id);
+            });
+
+            cardBody.appendChild(userName);
+            cardBody.appendChild(userId);
+            cardBody.appendChild(borrowedBooks);
+            cardBody.appendChild(deleteButton);
+
+            card.appendChild(cardBody);
+            column.appendChild(card);
+            list.appendChild(column);
         });
 
-        cardBody.appendChild(userName);
-        cardBody.appendChild(userId);
-        cardBody.appendChild(borrowedBooks);
-        cardBody.appendChild(deleteButton);
+        pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
 
-        card.appendChild(cardBody);
-        column.appendChild(card);
-        list.appendChild(column);
+        previousButton.disabled = currentPage === 1;
+        nextButton.disabled = currentPage === totalPages;
+    }
+
+    previousButton.addEventListener("click", (): void => {
+        if (currentPage > 1) {
+            currentPage--;
+
+            renderUsers();
+        }
     });
+
+    nextButton.addEventListener("click", (): void => {
+        const totalPages: number = Math.max(
+            1,
+            Math.ceil(users.length / usersPerPage)
+        );
+
+        if (currentPage < totalPages) {
+            currentPage++;
+
+            renderUsers();
+        }
+    });
+
+    renderUsers();
 
     return container;
 }
